@@ -1,0 +1,301 @@
+body, html{
+    font-family: Helvetica;
+	margin:0;
+	padding:0;
+}
+section {
+	position: relative;
+    width:100%;
+	padding:20px 0px;
+    height: auto;
+}
+
+/********************** fonts ***************************/
+
+@font-face {
+    font-family:FuturaStd-Bold;
+    src: url(Fonts/FuturaStd-Bold.otf);
+}
+
+@font-face{
+    font-family: FuturaStd-Book;
+    src:url(Fonts/FuturaStd-Book.otf);
+}
+  
+@font-face{
+    font-family: Gotham-Black;
+    src:url(Fonts/Gotham-Black.otf);
+}
+
+@font-face{
+    font-family: Gotham-Bold;
+    src:url(Fonts/Gotham-Bold.otf);
+}
+
+@font-face{
+    font-family: GothamRnd-Bold;
+    src:url(Fonts/GothamRnd-Bold.otf);
+}
+
+@font-face{
+    font-family: GothamRnd-Book;
+    src:url(Fonts/GothamRnd-Book.otf);
+}
+
+@font-face{
+    font-family: MyriadPro-Bold;
+    src:url(Fonts/MyriadPro-Bold.otf);
+}
+    
+@font-face{
+    font-family: MyriadPro-Regular;
+    src:url(Fonts/MyriadPro-Regular.otf);
+}
+
+
+/********************** Menu ***************************/
+#menu{
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100%;
+	height:50px;
+    z-index:10;
+	background:url(images/header.png);
+	text-align:left;
+
+}
+#headernom{
+	padding-top:10px;
+}
+.empty{
+	position:relative;
+	width:100%;
+	z-index:1;
+	height:50px;
+}
+
+.gracias
+{
+	margin-bottom:0px;
+	font-family:FuturaStd-Bold;
+	color:#0a416a;
+}
+
+ul {
+  text-align: center;
+  display: inline;
+  margin: 0;
+  padding: 15px 4px 17px 0;
+  list-style: none;
+}
+ul li {
+  font: bold 12px/18px sans-serif;
+  display: inline-block;
+  margin-right: -4px;
+  position: relative;
+  padding: 15px 20px;
+  
+    color: #fff;
+  cursor: pointer;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+ul li:hover {
+	
+  color: #fff;
+	font-weight:bold;
+}
+/********************** End Menu ***************************/
+
+/********************** Intro Section ***************************/
+
+#intro {
+    background:url(images/doodllll.png) #fafaec repeat;
+	
+}
+.content{
+	position:relative;
+	width:900px;
+	margin:auto;
+	text-align:center;
+	margin-bottom:25px;
+	margin-top:25px;
+	
+}
+
+.par{
+	margin-bottom:10px;
+}
+
+iframe {
+	position:relative;
+	width:560px;
+	float:left;
+}
+.registrar{
+	position:relative;
+	width:300px;
+	padding:10px 10px;
+	margin-left:10px;
+	float:left;
+	font-family:Gotham-Black;
+}
+
+#logoSection
+{
+	margin-bottom:15px;
+	
+}
+
+.action{
+	color:#015886;
+	font-family:FuturaStd-Bold;
+	margin-top:0px;
+	margin-bottom:0px;
+	padding-bottom:0px;
+	padding-top:0px;
+}
+
+.imgs{
+	margin-left:10px;
+}
+
+/********************** End Intro Section ***************************/
+p{
+    text-align:center;
+    max-width: 500px;
+    margin:0px auto;
+    padding:0px 25px;
+}
+
+#logo{
+	max-width:50%;
+}
+
+#mail {
+	background: #FFF;
+    width: 180px;
+	font-size:14px;
+    padding:5px 7px ;
+    margin:0;
+	margin-bottom:5px;
+	margin-top:5px;
+    border:#CCC thin solid;
+	border-radius:4px;
+	-webkit-border-radius:4px;
+	
+}
+.radio{
+	color:#015886;
+	margin-top:1px;
+	font-family:"GothamRnd-Book","Gotham";
+}
+.float_left{
+	color:#015886;
+}
+.interes{
+	color:#015886;
+	margin-top:5px;
+	margin-bottom:0px;
+}
+.footer{
+	
+position: relative;
+width: 100%;
+height: auto;
+background: #3C3C3C;
+}
+
+.foot{
+	display:inline;
+}
+.imagen{
+	max-width:80%;
+}
+
+
+}
+.parrafo1{
+	font-size:200%;
+	color:#6f6969;
+	font-family:"Gotham-Black", "Gotham";
+}
+.parrafo2{
+	color:#6f6969;
+	font-family:"GothamRnd-Book","Gotham";
+}
+strong {
+	font-family:"GothamRnd-Bold","Gotham";
+}
+
+.myButton {
+	margin-top:30px;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0088ff), color-stop(1, #0091ff));
+	background:-moz-linear-gradient(top, #0088ff 5%, #0091ff 100%);
+	background:-webkit-linear-gradient(top, #0088ff 5%, #0091ff 100%);
+	background:-o-linear-gradient(top, #0088ff 5%, #0091ff 100%);
+	background:-ms-linear-gradient(top, #0088ff 5%, #0091ff 100%);
+	background:linear-gradient(to bottom, #0088ff 5%, #0091ff 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088ff', endColorstr='#0091ff',GradientType=0);
+	background-color:#0088ff;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #0962e8;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:17px;
+	padding:14px 55px;
+	text-decoration:none;
+}
+.myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0091ff), color-stop(1, #0088ff));
+	background:-moz-linear-gradient(top, #0091ff 5%, #0088ff 100%);
+	background:-webkit-linear-gradient(top, #0091ff 5%, #0088ff 100%);
+	background:-o-linear-gradient(top, #0091ff 5%, #0088ff 100%);
+	background:-ms-linear-gradient(top, #0091ff 5%, #0088ff 100%);
+	background:linear-gradient(to bottom, #0091ff 5%, #0088ff 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0091ff', endColorstr='#0088ff',GradientType=0);
+	background-color:#0091ff;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+/********************** a Links ***************************/
+
+a {
+    display: inline;
+}
+a:link{
+    text-decoration:none;
+    color: #3D3D3D;
+}
+a:hover{
+    color:#2CB2FF;
+}
+a:visited {
+    color: #3D3D3D;
+}
+a:active {
+    color:#2CB2FF;
+}
+
+/********************** Clearfix Hack ***************************/
+
+.cf:before,
+.cf:after {content: " "; display: table;}
+.cf:after {clear: both;}
+.cf {*zoom: 1;}
+
+
+
+
+

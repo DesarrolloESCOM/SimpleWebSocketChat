@@ -1,0 +1,22 @@
+{
+  "name": "tutoronline",
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": ">= 2.x",
+    "react": "0.10.0"
+  },
+  "homepage": "https://github.com/pepo27/TutorOnline",
+  "authors": [
+    "Juan Alberto Reséndiz Arteaga <jresendiz27@gmail.com>"
+  ],
+  "description": "tutoronline js dependencies",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

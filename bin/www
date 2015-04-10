@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+var debug = require('debug')('tutoronline');
+var app = require('../app');
+var server = app.listen((process.env.PORT || 3000), (process.env.IP || '127.0.0.1'));
+var socketManagement = require('../sockets/sockets')
+socketAdmin = new socketManagement(3000,27000);
+//imageSocket
+socketAdmin.createSocket(server,function(error,socketCreated){
+	var lastData = null;
+	var message = {};
+	var messageLog = [];
+	var privateMessagesLog = [];
+	var usernameIndex = {};
+    var socketIdIndex = {};
+	if(error){
+		console.log("Error creating new socket!");
+		console.error(error);
+		return;
+	}
+	socketCreated.on('connection', function(socket){
+    	socket.on('sync', function (data) {
+    		//saving the last data!, this will become an object where we will get the data from each board!
+    		lastData = data;
+        	socketCreated.emit('image', data);
+    	});
+    	//When the someone tries to draw something, will always request the last data from the server.
+		socket.on('getLastData',function(data){
+			socketCreated.emit('image', lastData);
+		});
+		//
+		socket.on('getLastChat',function(data){
+			console.log(messageLog);
+			socketCreated.emit('syncMessages',messageLog.slice(Math.max(messageLog.length-3,1)));
+		});
+		socket.on('message',function(data){
+			//
+			message.content = data.content;
+			message.user = data.user;
+			message.date = new Date();
+			messageLog.push(message);
+			//
+			socketCreated.emit('incommingMessage',data);
+		});
+		socket.on('privateMessage',function(data){
+			message.content = data.content;
+			message.from = data.user;
+			message.to = data.to;
+			message.date = new Date();
+			privateMessagesLog.push(message);
+			socketCreated.to(usernameIndex[message.to]).emit('receivePrivate',data);
+		});
+		socket.on('register',function register(data){
+			usernameIndex[data.user] = data.socketId;
+			socketIdIndex[data.socketId] = data.user;
+			console.log(usernameIndex);
+			console.log(socketIdIndex);
+		})
+	});
+});
