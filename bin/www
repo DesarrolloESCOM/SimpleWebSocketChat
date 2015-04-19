@@ -17,15 +17,15 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 		console.error(error);
 		return;
 	}
-	socketCreated.on('connection', function(socket){
+	socketCreated.of('/messageNamespace').on('connection', function(socket){
     	socket.on('sync', function (data) {
     		//saving the last data!, this will become an object where we will get the data from each board!
     		lastData = data;
-        	socketCreated.emit('image', data);
+        	socketCreated.of('/messageNamespace').emit('image', data);
     	});
     	//When the someone tries to draw something, will always request the last data from the server.
 		socket.on('getLastData',function(data){
-			socketCreated.emit('image', lastData);
+			socketCreated.of('/messageNamespace').emit('image', lastData);
 		});
 		//
 		socket.on('getLastChat',function(data){
@@ -39,7 +39,7 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 			message.date = new Date();
 			messageLog.push(message);
 			//
-			socketCreated.emit('incommingMessage',data);
+			socketCreated.of('/messageNamespace').emit('incommingMessage',data);
 		});
 		socket.on('privateMessage',function(data){
 			message.content = data.content;
@@ -47,7 +47,7 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 			message.to = data.to;
 			message.date = new Date();
 			privateMessagesLog.push(message);
-			socketCreated.to(usernameIndex[message.to]).emit('receivePrivate',data);
+			socketCreated.of('/messageNamespace').to(usernameIndex[message.to]).emit('receivePrivate',data);
 		});
 		socket.on('register',function register(data){
 			usernameIndex[data.user] = data.socketId;

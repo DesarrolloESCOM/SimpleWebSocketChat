@@ -21,7 +21,7 @@ block content
   script.
     $(document).ready(function(){
       // for testing purposes
-        var socket = io.connect();
+        var socket = io.connect('http://localhost:3000/messageNamespace');
         var currentUser = $("#idUser").val()||('pepo'+parseInt((171)*Math.random()));
         function emitMessage(){
           var data = {};
