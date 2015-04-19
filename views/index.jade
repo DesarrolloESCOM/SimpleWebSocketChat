@@ -22,7 +22,7 @@ block content
     $(document).ready(function(){
       // for testing purposes
         var socket = io.connect();
-        var currentUser = $("#idUser").val()||('pepo'+Math.random());
+        var currentUser = $("#idUser").val()||('pepo'+parseInt((171)*Math.random()));
         function emitMessage(){
           var data = {};
           data.user = currentUser;

@@ -54,6 +54,25 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 			socketIdIndex[data.socketId] = data.user;
 			console.log(usernameIndex);
 			console.log(socketIdIndex);
-		})
+		});
+		socket.on('disconnect', function (data) {
+			console.log("----------------Username Index-------------------------");
+			console.log(usernameIndex);
+			console.log("----------------SocketID Index-------------------------");
+			console.log(socketIdIndex);
+			console.log("-------------------------------------------------------");
+			console.log("*********************");
+		    console.log(socket.id);
+		    var username = socketIdIndex[socket.id];
+	        var socketId = usernameIndex[username];
+	        delete usernameIndex[username];
+	        delete socketIdIndex[socketId];
+		    console.log("*********************");
+		    console.log("----------------Username Index-------------------------");
+			console.log(usernameIndex);
+			console.log("----------------SocketID Index-------------------------");
+			console.log(socketIdIndex);
+			console.log("-------------------------------------------------------");
+		});
 	});
 });
