@@ -17,17 +17,27 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 		console.error(error);
 		return;
 	}
-	socketCreated.of('/messageNamespace').on('connection', function(socket){
-    	socket.on('sync', function (data) {
-    		//saving the last data!, this will become an object where we will get the data from each board!
-    		lastData = data;
-        	socketCreated.of('/messageNamespace').emit('image', data);
-    	});
-    	//When the someone tries to draw something, will always request the last data from the server.
-		socket.on('getLastData',function(data){
-			socketCreated.of('/messageNamespace').emit('image', lastData);
+
+	socketCreated.of('/notificationNamespace').on('connection', function(socket){
+		console.log("Connected to notificationNamespace");
+		socket.on('userConnected',function (data){
+			console.log("Notification new user connected");
+			socketCreated.of('/notificationNamespace').emit('refreshUserList',usernameIndex);
 		});
-		//
+		socket.on('userDisconnected',function (data){
+			console.log("Notification a user has disconnected");
+			socketCreated.of('/notificationNamespace').emit('refreshUserList',usernameIndex);
+		});
+		socket.on('getUserList',function (){
+			console.log("Getting user list");
+			socketCreated.of('/notificationNamespace').emit('refreshUserList',usernameIndex);
+		});
+		socket.on('disconnect',function(){
+			console.log("disconnected!!! from Notification Namespace");
+		});
+	});
+
+	socketCreated.of('/messageNamespace').on('connection', function(socket){
 		socket.on('getLastChat',function(data){
 			console.log(messageLog);
 			socketCreated.emit('syncMessages',messageLog.slice(Math.max(messageLog.length-3,1)));
@@ -54,25 +64,22 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 			socketIdIndex[data.socketId] = data.user;
 			console.log(usernameIndex);
 			console.log(socketIdIndex);
+			socketCreated.of('notificationNamespace').emit('userConnected',usernameIndex);
 		});
 		socket.on('disconnect', function (data) {
-			console.log("----------------Username Index-------------------------");
-			console.log(usernameIndex);
-			console.log("----------------SocketID Index-------------------------");
-			console.log(socketIdIndex);
-			console.log("-------------------------------------------------------");
-			console.log("*********************");
-		    console.log(socket.id);
 		    var username = socketIdIndex[socket.id];
 	        var socketId = usernameIndex[username];
+	        console.log(username+" has disconnected");
+	        console.log(username+" has disconnected");
+	        console.log(username+" has disconnected");
 	        delete usernameIndex[username];
 	        delete socketIdIndex[socketId];
-		    console.log("*********************");
 		    console.log("----------------Username Index-------------------------");
 			console.log(usernameIndex);
 			console.log("----------------SocketID Index-------------------------");
 			console.log(socketIdIndex);
 			console.log("-------------------------------------------------------");
+			socketCreated.of('notificationNamespace').emit('userDisconnected',usernameIndex);
 		});
 	});
 });
