@@ -2,7 +2,7 @@ extends layout
 
 block content
   h1
-    'tutoronline' 
+    'Simple web chat' 
   hr
   h4
     'usuarios conectados'
@@ -27,80 +27,3 @@ block content
   button(id='sendPrivate').
     Enviar
   hr
-  script.
-    $(document).ready(function(){
-      // for testing purposes
-        // Messages Namespace
-        var socket = io.connect('http://localhost:3000/messageNamespace');
-        // Notification Namespace
-        var notificationSocket = io.connect('http://localhost:3000/notificationNamespace');
-        //
-        var currentUser = $("#idUser").val()||('pepo'+parseInt((171)*Math.random()));
-        function emitMessage(){
-          var data = {};
-          data.user = currentUser;
-          data.content = $("#content").val()||'';
-          $("#content").val('');
-          socket.emit('message',data);
-        }
-        function emitPrivateMessage(){
-          var data = {};
-          data.user = currentUser;
-          data.to = $("#to").val();
-          data.content = $("#privateContent").val()||'';
-          $("#content").val('');
-          socket.emit('privateMessage',data);
-        }
-        // Messages events
-        socket.on('syncMessages',function(data){
-          var len=data.length
-          for(var i=0; i < len;i++){
-            $("#chatContent").append("<p><strong>"+data[i].user+":</strong> "+data[i].content+"</p>");
-          }
-          console.log(data);
-        });
-        socket.on('connect',function(){
-          socket.emit('register',{
-            user:currentUser,
-            socketId:socket.id
-          });
-          socket.emit('getLastChat',null);
-        });
-        socket.on('image', function(data){          
-          if((currentUser!=data.user)){
-            board.saveShape(LC.JSONToShape(data.images));
-          }
-        });
-        socket.on('incommingMessage', function(data){
-          $("#chatContent").append("<p><strong>"+data.user+":</strong> "+data.content+"</p>");
-        });
-        socket.on('receivePrivate', function(data){
-            $("#chatContent").append("<p><strong>[PRIVATE]-"+data.user+":</strong> "+data.content+"</p>");
-          });
-        // notifications Event
-        notificationSocket.on('connect',function(){
-          notificationSocket.emit('getUserList'); 
-        });
-        notificationSocket.on('refreshUserList',function(data){
-          $("#users").html("");
-          console.log(data);
-          for(var key in data){
-            if(data.hasOwnProperty(key)){
-              $("#users").append("<li>"+key+"</li>");
-            }
-          }
-        });
-        //refreshUserList
-        //Chat Stuff
-        $(document).on("click",'#sendMessage', function(e) {
-            emitMessage();
-        });    
-        $(document).on("click",'#sendPrivate', function(e) {
-            emitPrivateMessage();
-        });    
-        $(document).on("keyup",'#content', function(e) {
-          if (e.keyCode == 13) {
-            emitMessage();
-            }
-        });
-      });
