@@ -1,17 +1,18 @@
 #!/usr/bin/env node
-var debug = require('debug')('tutoronline');
+var debug = require('debug')('simple web chat');
 var app = require('../app');
 var server = app.listen((process.env.PORT || 3000), (process.env.IP || '127.0.0.1'));
 var socketManagement = require('../sockets/sockets')
-socketAdmin = new socketManagement(3000,27000);
-//imageSocket
-socketAdmin.createSocket(server,function(error,socketCreated){
+webSocket = new socketManagement(3000,27000);
+
+webSocket.createSocket(server,function(error,socketCreated){
 	var lastData = null;
 	var message = {};
 	var messageLog = [];
 	var privateMessagesLog = [];
 	var usernameIndex = {};
     var socketIdIndex = {};
+
 	if(error){
 		console.log("Error creating new socket!");
 		console.error(error);
@@ -20,6 +21,7 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 
 	socketCreated.of('/notificationNamespace').on('connection', function(socket){
 		console.log("Connected to notificationNamespace");
+		// User events
 		socket.on('userConnected',function (data){
 			console.log("Notification new user connected");
 			socketCreated.of('/notificationNamespace').emit('refreshUserList',usernameIndex);
@@ -33,6 +35,10 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 			socketCreated.of('/notificationNamespace').emit('refreshUserList',usernameIndex);
 		});
 		socket.on('disconnect',function(){
+			console.log("disconnected!!! from Notification Namespace");
+		});
+		// Files events
+		socket.on('fileUploaded',function(){
 			console.log("disconnected!!! from Notification Namespace");
 		});
 	});
@@ -69,8 +75,6 @@ socketAdmin.createSocket(server,function(error,socketCreated){
 		socket.on('disconnect', function (data) {
 		    var username = socketIdIndex[socket.id];
 	        var socketId = usernameIndex[username];
-	        console.log(username+" has disconnected");
-	        console.log(username+" has disconnected");
 	        console.log(username+" has disconnected");
 	        delete usernameIndex[username];
 	        delete socketIdIndex[socketId];
