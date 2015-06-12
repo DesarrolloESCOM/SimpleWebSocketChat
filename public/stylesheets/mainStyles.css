@@ -1,0 +1,119 @@
+/* 
+    Document   : mainStyles
+    Created on : Dec 6, 2013, 8:59:37 PM
+    Author     : alberto
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+.tiny{
+    text-align: right;
+    font-size: 7px;
+    color:gray;   
+    float:right;
+}
+
+#chat{
+    width:100%;    
+    float:left;    
+    position:relative;
+    height: 100%;
+}
+#textPanel{
+    height:100%;
+    display:block;    
+}
+#chatLog{
+    height: auto;
+    height:550px;
+    /*overflow-x: hidden;*/
+    overflow-y: scroll;
+    display:block;
+}
+#filePanel{
+    height: 250px;    
+    width: 100%; 
+    padding: 0.5em; float: left; margin: 10px 10px 10px 0; 
+    background-color:whitesmoke;
+}
+
+#preview {
+    width: 100%; 
+    height: 50px; 
+    float: left; 
+    background-color:whitesmoke;
+    border: black dotted thin;
+    word-wrap:break-word;
+}
+#previewContent{
+    width: 100%;
+    max-width:100%; 
+    background-color: lightgoldenrodyellow;    
+    display: block;
+}
+#info{
+    width:38%;
+    height: 600px;
+    display:block;
+    float:left;
+}
+#files{
+    width:400px;
+    height: 350px;
+    display:block;
+    float:left;
+
+}
+#leftPanel,#rightPanel{
+    float:left;
+    display:inline-block;
+    width:50%;
+    height: 25%;
+}
+#chatContent{
+    text-align: left;    
+    float:left;    
+    height: 80%;
+    width: 60%;
+    margin-left: 2%;
+}
+#form{
+    width: 30;
+    text-align: left;
+    margin:10% 35% 10% 35%;    
+} 
+body{
+    background-color: gainsboro;    
+}
+content{
+    color:black;
+    font-size: x-small;
+}
+#successBanner{
+    position: fixed;
+}
+.username{
+    color: cadetblue;
+    font-weight: bold;
+}
+.chatBlock{
+    display:block;
+}
+.imagePreview{
+    width:100%;
+    max-width:350px;
+    height: 250px;
+    max-height: 250px;
+    margin: 5% 20% 20% 5%;
+}
+#mainContent{
+    width: 96%;
+    height: 90%;
+    margin: 0 4% 10% 4%;
+}
+#textArea{
+    display: block;
+}
