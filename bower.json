@@ -1,5 +1,5 @@
 {
-  "name": "tutoronline",
+  "name": "simpleWebChat",
   "version": "0.0.1",
   "dependencies": {
     "jquery": ">= 2.x",
@@ -9,7 +9,7 @@
   "authors": [
     "Juan Alberto Reséndiz Arteaga <jresendiz27@gmail.com>"
   ],
-  "description": "tutoronline js dependencies",
+  "description": "simple web chat js dependencies",
   "license": "MIT",
   "private": true,
   "ignore": [
