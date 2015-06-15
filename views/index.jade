@@ -1,29 +1,70 @@
 extends layout
 
 block content
-  h1
-    'Simple web chat' 
-  hr
-  h4
-    'usuarios conectados'
-  ul(id='users')
-  hr
-  h4
-    'chat'
-  div(id='chatContent')
-  hr
-  h4
-    'Opciones'
-  b.
-    A todos
-  input(id='content', placeholder='contenido publico')
-  button(id='sendMessage').
-    Enviar
-  hr
-  b.
-    Mensaje privado
-  input(id='to', placeholder='nickname')  
-  input(id='privateContent', placeholder='contenido privado')
-  button(id='sendPrivate').
-    Enviar
-  hr
+  div(class='navbar navbar-default')
+    div(class="container")
+      center
+        ul(class="nav")            
+          li(class="active")
+            table
+              tbody
+                tr
+                  td
+                    img(src="/images/Logo-IPN.png" width="20px" height="29px")
+                  td
+                    a(href="#").
+                      Instituto Politécnico Nacional  - Escuela Superior de Cómputo
+                  td
+                    img(src="/images/escom_normal.png" width="29px" height="29px")
+  div(class="container" id="mainContent")
+    div(id="chat")
+      div(id="chatContent" class="panel panel-primary")
+        div(class="panel-heading")
+          h3(class="panel-title").
+            Chat Principal
+        div(id="textPanel")
+          div(id="chatLog")
+          div(id="textArea")
+            hr
+            b.
+              A todos
+            br
+            input(id='content', placeholder='contenido publico')
+            button(id='sendMessage' class="btn-success").
+              Enviar
+            hr
+            b.
+              Mensaje privado
+            br
+            input(id='to', placeholder='nickname')  
+            input(id='privateContent', placeholder='contenido privado')
+            button(id='sendPrivate' class="btn btn-success").
+              Enviar
+            div(id="leftPanel")
+              input(class="form-control" placeholder="Escribe lo que deseas expresar!" type="text" id="message" width="50%")
+            div(id="rightPanel")
+              button(id="sendMessage" class="btn btn-success" disabled="true").
+                Enviar
+              button(id="openUploadDialog" class="btn btn-warning ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false")
+                span(class="ui-button-text").
+                  Subir un archivo
+              button(id="closeSession" class="btn btn-warning").
+                Salir
+              form(action="../login/logout" method="POST" id="logoutForm")
+      div(id="info")
+        div(class="panel panel-success")
+          div(class="panel-heading")
+            h3(class="panel-title").
+              Usuarios Conectados
+          div(id="users" class="panel-body")
+          div(class="panel-heading")
+            h3(class="panel-title").
+              Archivos Recientes
+          div(id="filePanel" class="panel-body")
+        div(class="panel panel-warning")
+          div(class="panel-heading")
+            h3(class="panel-title" id="titleReceiver").
+              Vista Previa
+          div(id="preview" class="ui-droppable").
+            Arrastra la liga para ver el contenido deseado.
+          div(id="previewContent")

@@ -1,5 +1,5 @@
 {
-  "name": "tutoronline",
+  "name": "SimpleWebChat",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -12,8 +12,7 @@
     "morgan": "~1.2.3",
     "serve-favicon": "~2.0.1",
     "debug": "~1.0.4",
-    "jade": "~1.5.0",
-    "mongoose"   : "3.8.1",
+    "ejs":"*",
     "socket.io": "latest"
   }
 }
