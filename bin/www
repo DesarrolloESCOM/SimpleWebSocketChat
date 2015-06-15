@@ -48,8 +48,10 @@ webSocket.createSocket(server,function(error,socketCreated){
 	socketCreated.of('/messageNamespace').on('connection', function(socket){
 		socket.on('getLastChat',function(data){
 			console.log(messageLog);
-			socketCreated.emit('syncMessages',messageLog.slice(Math.max(messageLog.length-3,1)));
+			console.log("Sending messages");
+			socketCreated.of('/messageNamespace').to(socket.id).emit('syncMessages', messageLog.slice(-10));
 		});
+		
 		socket.on('message',function(data){
 			//
 			message.content = data.content;
@@ -72,7 +74,7 @@ webSocket.createSocket(server,function(error,socketCreated){
 			socketIdIndex[data.socketId] = data.user;
 			console.log(usernameIndex);
 			console.log(socketIdIndex);
-			socketCreated.of('notificationNamespace').emit('userConnected',usernameIndex);
+			socketCreated.of('/notificationNamespace').emit('userConnected',usernameIndex);
 		});
 		socket.on('disconnect', function (data) {
 		    var username = socketIdIndex[socket.id];
@@ -85,7 +87,7 @@ webSocket.createSocket(server,function(error,socketCreated){
 			console.log("----------------SocketID Index-------------------------");
 			console.log(socketIdIndex);
 			console.log("-------------------------------------------------------");
-			socketCreated.of('notificationNamespace').emit('userDisconnected',usernameIndex);
+			socketCreated.of('/notificationNamespace').emit('userDisconnected',usernameIndex);
 		});
 	});
 });
