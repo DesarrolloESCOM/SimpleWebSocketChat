@@ -1,11 +1,11 @@
 $(document).ready(function(){
   // for testing purposes
   // Messages Namespace
-  var socket = io.connect('http://localhost:3000/messageNamespace');
+  var messagessocket = io.connect('http://localhost:3000/messageNamespace');
   // Notification Namespace
   var notificationSocket = io.connect('http://localhost:3000/notificationNamespace');
   // Current user, generated randomly
-  var currentUser = $("#idUser").val()||('pepo'+parseInt((171)*Math.random()));
+  var currentUser = $("#idUser").val()||('AnonUser'+parseInt((171)*Math.random()));
   // send a new message to the chat
   function emitMessage(){
     var data = {};
@@ -13,7 +13,7 @@ $(document).ready(function(){
     data.content = $("#content").val()||'';
     data.date = new Date();
     $("#content").val('');
-    socket.emit('message',data);
+    messagessocket.emit('message',data);
   }
   // send a new private message 
   function emitPrivateMessage(){
@@ -22,30 +22,31 @@ $(document).ready(function(){
     data.to = $("#to").val();
     data.content = $("#privateContent").val()||'';
     $("#content").val('');
-    socket.emit('privateMessage',data);
+    messagessocket.emit('privateMessage',data);
   }
   // Messages events
-  socket.on('connect',function connectedToSocket(){
-    socket.emit('register',{
+  messagessocket.on('connect',function connectedToSocket(){
+    messagessocket.emit('register',{
       user:currentUser,
-      socketId:socket.id
+      socketId:messagessocket.id
     });
-    socket.emit('getLastChat',null);
+    messagessocket.emit('getLastChat',null);
   });
 
-  socket.on('syncMessages',function syncMessages(data){
-    var len=data.length
+  messagessocket.on('syncMessages',function syncMessages(data){
+    console.log(data);
+    var len=data.length;
     for(var i=0; i < len;i++){
-      $("#chatContent").append("<p><strong>"+data[i].user+":</strong> "+data[i].content+"</p>");
+      $("#chatLog").append("<p><strong>"+data[i].user+":</strong> "+data[i].content+"</p>");
     }
     console.log(data);
   });
 
-  socket.on('incommingMessage', function incommingMessage(data){
-    $("#chatContent").append("<p><strong>"+data.user+":</strong> "+data.content+"</p>");
+  messagessocket.on('incommingMessage', function incommingMessage(data){
+    $("#chatLog").append("<p><strong>"+data.user+":</strong> "+data.content+"</p>");
   });
-  socket.on('receivePrivate', function receivePrivate(data){
-      $("#chatContent").append("<p><strong>[PRIVATE]-"+data.user+":</strong> "+data.content+"</p>");
+  messagessocket.on('receivePrivate', function receivePrivate(data){
+      $("#chatLog").append("<p><strong>[PRIVATE]-"+data.user+":</strong> "+data.content+"</p>");
     });
   // notifications Event
   notificationSocket.on('connect',function connectedToNotifications(){
@@ -61,7 +62,7 @@ $(document).ready(function(){
     }
   });
   // Files events
-  socket.on('newFile', function newFileNotification(data){          
+  messagessocket.on('newFile', function newFileNotification(data){          
     if((currentUser!=data.user)){
       board.saveShape(LC.JSONToShape(data.images));
     }
@@ -74,5 +75,9 @@ $(document).ready(function(){
     if (e.keyCode == 13) {
       emitMessage();
     }
+  });
+  $(document).on('click','#users > li',function getValue(){
+    console.log($(this).text());
+    $("#to").val($(this).text());
   });
 });
