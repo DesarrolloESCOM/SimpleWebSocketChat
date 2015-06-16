@@ -5,10 +5,4 @@ var router = express.Router();
 router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
 });
-router.post('/fileUpload',function(req,res){
-	console.log("POST method to this url");
-});
-router.get('/getFile',function(req,res){
-	console.log("Get a file");
-});
 module.exports = router;

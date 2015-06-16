@@ -1,7 +1,7 @@
 $(document).ready(function(){
   // for testing purposes
   // Messages Namespace
-  var messagessocket = io.connect('http://localhost:3000/messageNamespace');
+  var messagesocket = io.connect('http://localhost:3000/messageNamespace');
   // Notification Namespace
   var notificationSocket = io.connect('http://localhost:3000/notificationNamespace');
   // Current user, generated randomly
@@ -13,7 +13,7 @@ $(document).ready(function(){
     data.content = $("#content").val()||'';
     data.date = new Date();
     $("#content").val('');
-    messagessocket.emit('message',data);
+    messagesocket.emit('message',data);
   }
   // send a new private message 
   function emitPrivateMessage(){
@@ -22,18 +22,18 @@ $(document).ready(function(){
     data.to = $("#to").val();
     data.content = $("#privateContent").val()||'';
     $("#content").val('');
-    messagessocket.emit('privateMessage',data);
+    messagesocket.emit('privateMessage',data);
   }
   // Messages events
-  messagessocket.on('connect',function connectedToSocket(){
-    messagessocket.emit('register',{
+  messagesocket.on('connect',function connectedToSocket(){
+    messagesocket.emit('register',{
       user:currentUser,
-      socketId:messagessocket.id
+      socketId:messagesocket.id
     });
-    messagessocket.emit('getLastChat',null);
+    messagesocket.emit('getLastChat',null);
   });
 
-  messagessocket.on('syncMessages',function syncMessages(data){
+  messagesocket.on('syncMessages',function syncMessages(data){
     console.log(data);
     var len=data.length;
     for(var i=0; i < len;i++){
@@ -42,10 +42,10 @@ $(document).ready(function(){
     console.log(data);
   });
 
-  messagessocket.on('incommingMessage', function incommingMessage(data){
+  messagesocket.on('incommingMessage', function incommingMessage(data){
     $("#chatLog").append("<p><strong>"+data.user+":</strong> "+data.content+"</p>");
   });
-  messagessocket.on('receivePrivate', function receivePrivate(data){
+  messagesocket.on('receivePrivate', function receivePrivate(data){
       $("#chatLog").append("<p><strong>[PRIVATE]-"+data.user+":</strong> "+data.content+"</p>");
     });
   // notifications Event
@@ -62,7 +62,7 @@ $(document).ready(function(){
     }
   });
   // Files events
-  messagessocket.on('newFile', function newFileNotification(data){          
+  messagesocket.on('newFile', function newFileNotification(data){          
     if((currentUser!=data.user)){
       board.saveShape(LC.JSONToShape(data.images));
     }

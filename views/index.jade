@@ -68,3 +68,11 @@ block content
           div(id="preview" class="ui-droppable").
             Arrastra la liga para ver el contenido deseado.
           div(id="previewContent")
+  hr
+  hr
+  hr
+  hr
+  hr  
+  form(id="uploadForm",enctype="multipart/form-data", action= "/fileUpload", method="post")
+    input(type="file" name="userPhoto")
+    input(type="submit" value="Upload Image" name="submit")
