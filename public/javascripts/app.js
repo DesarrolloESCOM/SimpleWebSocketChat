@@ -5,7 +5,30 @@ $(document).ready(function(){
   // Notification Namespace
   var notificationSocket = io.connect('http://localhost:3000/notificationNamespace');
   // Current user, generated randomly
-  var currentUser = $("#idUser").val()||('AnonUser'+parseInt((171)*Math.random()));
+  var currentUser = $("#idUser").val()||('AnonUser'+parseInt((271)*Math.random()));
+  // Dialog stuff
+  $("#dialog-form").dialog({
+    autoOpen: false,
+    height: 500,
+    width: 500,
+    modal: true,
+    buttons: {
+        "Subir": function() {
+            $("#fileUploader").submit();
+        },
+        Cancel: function() {
+            $(this).dialog("close");
+        }
+    },
+    close: function() {
+        getFileLog();
+        return true;
+    }
+  });
+  $("#openUploadDialog").button().click(function() {
+    $("#dialog-form").dialog("open");
+  });
+  $("#fileUserName").val(currentUser);
   // send a new message to the chat
   function emitMessage(){
     var data = {};
