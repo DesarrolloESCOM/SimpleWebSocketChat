@@ -1,98 +1,98 @@
 #!/usr/bin/env node
 var debug = require('debug')('simple web chat');
 var app = require('../app');
-var server = app.listen((process.env.PORT || 3000), (process.env.IP || '127.0.0.1'), function serverStarted(){
-	console.log("Server started at: " + (process.env.PORT || 3000));
+var server = app.listen((process.env.PORT || 3000), (process.env.IP || '127.0.0.1'), function serverStarted() {
+  console.log("Server started at: " + (process.env.PORT || 3000));
 });
 var socketManagement = require('../sockets/sockets')
-webSocket = new socketManagement(3000,27000);
-webSocket.createSocket(server,function(error,socketInstance){
-	var lastData = null;
-	var message = {};
-	var messageLog = [];
-	var privateMessagesLog = [];
-	var usernameIndex = {};
-    var socketIdIndex = {};
+webSocket = new socketManagement(3000, 27000);
+webSocket.createSocket(server, function (error, socketInstance) {
+  var lastData = null;
+  var message = {};
+  var messageLog = [];
+  var privateMessagesLog = [];
+  var usernameIndex = {};
+  var socketIdIndex = {};
 
-	if(error){
-		console.log("Error creating new socket!");
-		console.error(error);
-		return;
-	}
+  if (error) {
+    console.log("Error creating new socket!");
+    console.error(error);
+    return;
+  }
 
-	socketInstance.of('/notificationNamespace').on('connection', function(socket){
-		console.log("Connected to notificationNamespace");
-		// User events
-		socket.on('userConnected',function (data){
-			console.log("Notification new user connected");
-			socketInstance.of('/notificationNamespace').emit('refreshUserList',usernameIndex);
-		});
-		socket.on('userDisconnected',function (data){
-			console.log("Notification a user has disconnected");
-			socketInstance.of('/notificationNamespace').emit('refreshUserList',usernameIndex);
-		});
-		socket.on('getUserList',function (){
-			console.log("Getting user list");
-			socketInstance.of('/notificationNamespace').emit('refreshUserList',usernameIndex);
-		});
-		socket.on('disconnect',function(){
-			console.log("disconnected!!! from Notification Namespace");
-		});
-		// Files events
-		socket.on('fileUploaded',function(data){
-			console.log("An uploadedFile");
-			console.log("An uploadedFile");
-			console.log(data);
-			console.log(data);
-			console.log(data);
-			console.log("An uploadedFile");
-			console.log("An uploadedFile");
-		});
-	});
+  socketInstance.of('/notificationNamespace').on('connection', function (socket) {
+    console.log("Connected to notificationNamespace");
+    // User events
+    socket.on('userConnected', function (data) {
+      console.log("Notification new user connected");
+      socketInstance.of('/notificationNamespace').emit('refreshUserList', usernameIndex);
+    });
+    socket.on('userDisconnected', function (data) {
+      console.log("Notification a user has disconnected");
+      socketInstance.of('/notificationNamespace').emit('refreshUserList', usernameIndex);
+    });
+    socket.on('getUserList', function () {
+      console.log("Getting user list");
+      socketInstance.of('/notificationNamespace').emit('refreshUserList', usernameIndex);
+    });
+    socket.on('disconnect', function () {
+      console.log("disconnected!!! from Notification Namespace");
+    });
+    // Files events
+    socket.on('fileUploaded', function (data) {
+      console.log("An uploadedFile");
+      console.log("An uploadedFile");
+      console.log(data);
+      console.log(data);
+      console.log(data);
+      console.log("An uploadedFile");
+      console.log("An uploadedFile");
+    });
+  });
 
-	socketInstance.of('/messageNamespace').on('connection', function(socket){
-		socket.on('getLastChat',function(data){
-			console.log(messageLog);
-			console.log("Sending messages");
-			socketInstance.of('/messageNamespace').to(socket.id).emit('syncMessages', messageLog.slice(-10));
-		});
-		
-		socket.on('message',function(data){
-			//
-			message.content = data.content;
-			message.user = data.user;
-			message.date = new Date();
-			messageLog.push(message);
-			//
-			socketInstance.of('/messageNamespace').emit('incommingMessage',data);
-		});
-		socket.on('privateMessage',function(data){
-			message.content = data.content;
-			message.from = data.user;
-			message.to = data.to;
-			message.date = new Date();
-			privateMessagesLog.push(message);
-			socketInstance.of('/messageNamespace').to(usernameIndex[message.to]).emit('receivePrivate',data);
-		});
-		socket.on('register',function register(data){
-			usernameIndex[data.user] = data.socketId;
-			socketIdIndex[data.socketId] = data.user;
-			console.log(usernameIndex);
-			console.log(socketIdIndex);
-			socketInstance.of('/notificationNamespace').emit('userConnected',usernameIndex);
-		});
-		socket.on('disconnect', function (data) {
-		    var username = socketIdIndex[socket.id];
-	        var socketId = usernameIndex[username];
-	        console.log(username+" has disconnected");
-	        delete usernameIndex[username];
-	        delete socketIdIndex[socketId];
-		    console.log("----------------Username Index-------------------------");
-			console.log(usernameIndex);
-			console.log("----------------SocketID Index-------------------------");
-			console.log(socketIdIndex);
-			console.log("-------------------------------------------------------");
-			socketInstance.of('/notificationNamespace').emit('userDisconnected',usernameIndex);
-		});
-	});
+  socketInstance.of('/messageNamespace').on('connection', function (socket) {
+    socket.on('getLastChat', function (data) {
+      console.log(messageLog);
+      console.log("Sending messages");
+      socketInstance.of('/messageNamespace').to(socket.id).emit('syncMessages', messageLog.slice(-10));
+    });
+
+    socket.on('message', function (data) {
+      //
+      message.content = data.content;
+      message.user = data.user;
+      message.date = new Date();
+      messageLog.push(message);
+      //
+      socketInstance.of('/messageNamespace').emit('incommingMessage', data);
+    });
+    socket.on('privateMessage', function (data) {
+      message.content = data.content;
+      message.from = data.user;
+      message.to = data.to;
+      message.date = new Date();
+      privateMessagesLog.push(message);
+      socketInstance.of('/messageNamespace').to(usernameIndex[message.to]).emit('receivePrivate', data);
+    });
+    socket.on('register', function register(data) {
+      usernameIndex[data.user] = data.socketId;
+      socketIdIndex[data.socketId] = data.user;
+      console.log(usernameIndex);
+      console.log(socketIdIndex);
+      socketInstance.of('/notificationNamespace').emit('userConnected', usernameIndex);
+    });
+    socket.on('disconnect', function (data) {
+      var username = socketIdIndex[socket.id];
+      var socketId = usernameIndex[username];
+      console.log(username + " has disconnected");
+      delete usernameIndex[username];
+      delete socketIdIndex[socketId];
+      console.log("----------------Username Index-------------------------");
+      console.log(usernameIndex);
+      console.log("----------------SocketID Index-------------------------");
+      console.log(socketIdIndex);
+      console.log("-------------------------------------------------------");
+      socketInstance.of('/notificationNamespace').emit('userDisconnected', usernameIndex);
+    });
+  });
 });
