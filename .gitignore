@@ -28,3 +28,5 @@ node_modules
 # removing idea support
 .idea
 *.iml
+# public directory
+.public/uploads/
