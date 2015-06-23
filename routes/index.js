@@ -16,20 +16,6 @@ router.get('/getMimeType',function(req, res){
 });
 router.get('/getFileLog', function(req, res){
   var files = fs.readdirSync('./public/uploads/');
-  /*
-  var filteredFiles = [];
-  for(var i=0;i<files.length;i++){
-    var fileInformation = fs.statSync(files[i]);
-    if(!(fileInformation.isDirectory())){
-      console.log(files[i]);
-      console.log(files[i]);
-      console.log(files[i]);
-  	  filteredFiles.push(files[i]);
-    }
-    res.json(filteredFiles);
-    return;
-  }
-  */
   res.json(files);
 });
 module.exports = router;
