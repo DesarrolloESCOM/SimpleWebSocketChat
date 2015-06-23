@@ -5,7 +5,7 @@ block content
     p(class="validateTips").
       Elige un archivo a subir
     form(enctype="multipart/form-data", action= "/fileUpload", method="post", id="fileUploader", target="fileResponseReceiver")
-      input(type="hidden", id="fileUserName", value="")
+      input(type="hidden", name="fileUserName", id="fileUserName", value="")
       input(type="file" name="file")
     center
       iframe(id="fileResponseReceiver" name="fileResponseReceiver" width="100%" height="100px" scrolling="no" src="")

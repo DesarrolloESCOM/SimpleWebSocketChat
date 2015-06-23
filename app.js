@@ -8,7 +8,6 @@ var multer = require('multer');
 var io_client = require('socket.io-client');
 //
 var routes = require('./routes/index');
-var users = require('./routes/users');
 //for testing purposes with socket.io
 var app = express();
 var done = false;
@@ -24,28 +23,36 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
-app.use('/users', users);
 // multer file management
 app.use(multer({
   dest: './public/uploads/',
-  rename: function (fieldname, filename) {
-    return filename + Date.now() + parseInt((171) * Math.random())
-  },
-  onFileUploadStart: function (file) {
-    console.log("A new file is being added");
-  },
-  onFileUploadComplete: function (file) {
+  rename: function (fieldname, filename, req, res) {
+    var fileName = filename + Date.now() + parseInt((171) * Math.random());
     var socketIO = require('socket.io-client');
     var messageBot = socketIO.connect('http://localhost:3000/messageNamespace');
+    var notificationBot = socketIO.connect('http://localhost:3000/notificationNamespace');
+    // Adding a message to the chat about the file
     var data = {};
     data.user = 'ServerBot';
-    data.content = "A new file has been uploaded!!!"
-    data.date = Date.now();
-    // Adding a message to the chat about the image
-    console.log(data);
-    console.log(messageBot);
-    console.log(messageBot.id);
+    data.content = "El usuario <i>"+req.body.fileUserName+"</i> subió el archivo ["+fileName+"]";
+    data.date = Date.now();    
     messageBot.emit('message', data);
+    // Updating files list
+    notificationBot.emit('fileUploaded', fileName);
+    return fileName
+  },
+  onFileUploadStart: function (file, req, res) {
+    var socketIO = require('socket.io-client');
+    var messageBot = socketIO.connect('http://localhost:3000/messageNamespace');
+    var data = {};    
+    data.user = 'ServerBot';    
+    data.content = "El usuario <i>"+req.body.fileUserName+"</i> esta subiendo un archivo: ["+file.originalname+"]";
+    data.date = Date.now();
+    // Adding a message to the chat about the file
+    messageBot.emit('message', data);
+    done = true;
+  },
+  onFileUploadComplete: function (file, req, res) {
     done = true;
   }
 }));
@@ -53,9 +60,6 @@ app.post('/fileUpload', function (req, res) {
   if (done == true) {
     res.end("File has been uploaded");
   }
-});
-app.get('/getFile', function (req, res) {
-  console.log("Get a file");
 });
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

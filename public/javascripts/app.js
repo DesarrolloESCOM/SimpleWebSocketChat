@@ -5,7 +5,7 @@ $(document).ready(function(){
   // Notification Namespace
   var notificationSocket = io.connect('http://localhost:3000/notificationNamespace');
   // Current user, generated randomly
-  var currentUser = $("#idUser").val()||('AnonUser'+parseInt((271)*Math.random()));
+  window.currentUser = $("#idUser").val()||('AnonUser'+parseInt((271)*Math.random()));
   // Dialog stuff
   $("#dialog-form").dialog({
     autoOpen: false,
@@ -13,16 +13,19 @@ $(document).ready(function(){
     width: 500,
     modal: true,
     buttons: {
-        "Subir": function() {
-            $("#fileUploader").submit();
-        },
-        Cancel: function() {
-            $(this).dialog("close");
-        }
+      "Subir": function() {
+          $("#fileUploader").submit();
+      },
+      "Cancelar": function() {
+          $(this).dialog("close");
+      }
     },
     close: function() {
-        getFileLog();
-        return true;
+      getFileLog();
+      return true;
+    },
+    open: function(){
+      $("#fileUserName").val(window.currentUser);
     }
   });
   $("#openUploadDialog").button().click(function() {
@@ -61,8 +64,7 @@ $(document).ready(function(){
     var len=data.length;
     for(var i=0; i < len;i++){
       $("#chatLog").append("<p><strong>"+data[i].user+":</strong> "+data[i].content+"</p>");
-    }
-    console.log(data);
+    }    
   });
 
   messagesocket.on('incommingMessage', function incommingMessage(data){

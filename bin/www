@@ -40,20 +40,12 @@ webSocket.createSocket(server, function (error, socketInstance) {
     });
     // Files events
     socket.on('fileUploaded', function (data) {
-      console.log("An uploadedFile");
-      console.log("An uploadedFile");
-      console.log(data);
-      console.log(data);
-      console.log(data);
-      console.log("An uploadedFile");
-      console.log("An uploadedFile");
+      
     });
   });
 
   socketInstance.of('/messageNamespace').on('connection', function (socket) {
-    socket.on('getLastChat', function (data) {
-      console.log(messageLog);
-      console.log("Sending messages");
+    socket.on('getLastChat', function (data) {      
       socketInstance.of('/messageNamespace').to(socket.id).emit('syncMessages', messageLog.slice(-10));
     });
 
@@ -76,22 +68,14 @@ webSocket.createSocket(server, function (error, socketInstance) {
     });
     socket.on('register', function register(data) {
       usernameIndex[data.user] = data.socketId;
-      socketIdIndex[data.socketId] = data.user;
-      console.log(usernameIndex);
-      console.log(socketIdIndex);
+      socketIdIndex[data.socketId] = data.user;      
       socketInstance.of('/notificationNamespace').emit('userConnected', usernameIndex);
     });
     socket.on('disconnect', function (data) {
       var username = socketIdIndex[socket.id];
-      var socketId = usernameIndex[username];
-      console.log(username + " has disconnected");
+      var socketId = usernameIndex[username];      
       delete usernameIndex[username];
-      delete socketIdIndex[socketId];
-      console.log("----------------Username Index-------------------------");
-      console.log(usernameIndex);
-      console.log("----------------SocketID Index-------------------------");
-      console.log(socketIdIndex);
-      console.log("-------------------------------------------------------");
+      delete socketIdIndex[socketId];      
       socketInstance.of('/notificationNamespace').emit('userDisconnected', usernameIndex);
     });
   });
