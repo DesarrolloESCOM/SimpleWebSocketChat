@@ -20,8 +20,7 @@ $(document).ready(function(){
           $(this).dialog("close");
       }
     },
-    close: function() {
-      getFileLog();
+    close: function() {      
       return true;
     },
     open: function(){
@@ -107,8 +106,7 @@ $(document).ready(function(){
   $(document).on('click','#users > li',function getValue(){
     $("#to").val($(this).text());
   });
-  // Files stuff
-    
+  // Files stuff    
   function getPreviewOfFile(nameOfFile) {
     var type = "";
     var container = ""

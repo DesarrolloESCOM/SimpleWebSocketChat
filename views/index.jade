@@ -32,33 +32,48 @@ block content
             Chat Principal
         div(id="textPanel")
           div(id="chatLog")
-          div(id="textArea")
+          div(id="textArea")            
             hr
-            b.
-              A todos
-            br
-            input(id='content', placeholder='contenido publico')
-            button(id='sendMessage' class="btn-success").
-              Enviar
-            hr
-            b.
-              Mensaje privado
-            br
-            input(id='to', placeholder='nickname')  
-            input(id='privateContent', placeholder='contenido privado')
-            button(id='sendPrivate' class="btn btn-success").
-              Enviar
-            div(id="leftPanel")
-              input(class="form-control" placeholder="Escribe lo que deseas expresar!" type="text" id="message" width="50%")
-            div(id="rightPanel")
-              button(id="sendMessage" class="btn btn-success" disabled="true").
-                Enviar
-              button(id="openUploadDialog" class="btn btn-warning ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false")
-                span(class="ui-button-text").
-                  Subir un archivo
-              button(id="closeSession" class="btn btn-warning").
-                Salir
-              form(action="../login/logout" method="POST" id="logoutForm")
+            table(align="left")
+              tr
+                td(colspan="2")
+                  b.
+                    A todos
+              tr
+                td
+                  b.
+                    Mensaje
+                td
+                  input(id='content', placeholder='Contenido publico')
+              tr                
+                td
+                  button(id='sendMessage' class="btn btn-success btn-sm").
+                    Enviar
+                td
+                  button(id="openUploadDialog" class="btn btn-warning btn-sm").
+                    Subir un archivo
+            table(align="right")
+              tr
+                td(colspan="2")
+                  b.
+                    Mensaje privado
+              tr
+                td
+                  b.
+                    Usuario
+                td
+                  input(id='to', placeholder='Nombre de usuario')
+              tr
+                td
+                  b.
+                    Mensaje
+                td
+                  input(id='privateContent', placeholder='Contenido privado')
+              tr
+                td
+                td
+                  button(id='sendPrivate' class="btn btn-success btn-sm").
+                    Enviar
       div(id="info")
         div(class="panel panel-success")
           div(class="panel-heading")
