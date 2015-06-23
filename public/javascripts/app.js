@@ -86,13 +86,6 @@ $(document).ready(function(){
       }
     }
   });
-  // Files events
-  messagesocket.on('newFile', function newFileNotification(data){          
-    if((currentUser!=data.user)){
-      board.saveShape(LC.JSONToShape(data.images));
-    }
-  });
-
   //Chat Stuff
   $(document).on("click",'#sendMessage', emitMessage);    
   $(document).on("click",'#sendPrivate', emitPrivateMessage);    
@@ -102,7 +95,79 @@ $(document).ready(function(){
     }
   });
   $(document).on('click','#users > li',function getValue(){
-    console.log($(this).text());
     $("#to").val($(this).text());
+  });
+  // Files stuff
+  function getFileLog() {
+    $.ajax({
+        type: "GET",
+        contenType: "JSON",
+        url: "/getFileLog"
+    }).done(function(response) {
+        $("#filePanel").html("");
+        var chatArray = response;
+        console.log(chatArray);
+        for (var i = 0; i < chatArray.length; i++) {
+            $("#filePanel").append("<div class=\"chatBlock\"><a href=\"#\"><input type=\"hidden\" name=\"fileName\" value=\"" + chatObject[i] + "\"/> <span>" + chatArray[i] + "</span></a></div>");
+        }
+        var draggableContent = $("#filePanel a");
+        $.each(draggableContent, function() {
+            $(this).draggable();
+        });
+    }).fail(function(response) {
+        $("#filePanel").html("");
+        $("#filePanel").append("<div class=\"chatBlock\"><a href=\"#\">" + response.responseText + "</a></div>");
+    });
+  }
+  function getPreviewOfFile(nameOfFile) {
+    var type = "";
+    var container = ""
+    $.ajax({
+        type: "GET",
+        contentType: "JSON",
+        url: "/getMimeType",
+        data: {
+            nameOfFile: nameOfFile
+        }
+    }).done(function(response) {
+        type = response;
+        console.log("Response type" + type);
+        var splittedType = type.split("/");
+        if (splittedType[0] == "image") {
+            container = "<img class=\"imagePreview\" src=\"/uploads/" + nameOfFile + "\"/>";
+        } else if (splittedType[0] == "video") {
+            container = "<div style=\"margin:200px 0 0 0;\"><video controls autoplay name=\"media\">";
+            container += "<source src=\"/uploads/" + nameOfFile + "\" type=\"" + type + "\"/>";
+            container += "</video></div>";
+        } else if (splittedType[0] == "audio") {
+            container = "<div style=\"margin:200px 0 0 0;\"><video controls autoplay name=\"media\">";
+            container += "<source src=\"/uploads/" + nameOfFile + "\" type=\"" + type + "\"/>";
+            container += "</video></div>";
+        } else if (splittedType[0] == "text") {
+            container = "<iframe src=\"/uploads/" + nameOfFile + "\" width=\"100%\" height=\"100%\" frameborder=\"0\">";
+        } else {
+            container = "<h3>Contenido no soportado</h3>"
+        }
+        $("#previewContent").html(container);
+    });
+  }
+  // File drag and preview
+  $("#preview").droppable({
+    drop: function(event, ui) {
+      //console.log(ui);           
+      var $element = ui.draggable;
+      var nameOfFile = $element.find("input").val();
+      $element.fadeOut(function() {
+          getFileLog();
+      });
+      $("#titleReceiver").html("Vista previa [" + nameOfFile + "]")
+      getPreviewOfFile(nameOfFile);
+    }
+  });
+  // Files events
+  messagesocket.on('newFile', function newFileNotification(data){          
+    if((currentUser!=data.user)){
+      board.saveShape(LC.JSONToShape(data.images));
+    }
   });
 });
