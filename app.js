@@ -15,8 +15,6 @@ var done = false;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -27,7 +25,8 @@ app.use('/', routes);
 app.use(multer({
   dest: './public/uploads/',
   rename: function (fieldname, filename, req, res) {
-    var fileName = filename + Date.now() + parseInt((171) * Math.random());
+    var date = new Date();
+    var fileName = req.body.fileUserName +"_"+ date.toISOString();
     var socketIO = require('socket.io-client');
     var messageBot = socketIO.connect('http://localhost:3000/messageNamespace');
     var notificationBot = socketIO.connect('http://localhost:3000/notificationNamespace');
@@ -38,19 +37,8 @@ app.use(multer({
     data.date = Date.now();    
     messageBot.emit('message', data);
     // Updating files list
-    notificationBot.emit('fileUploaded', fileName);
+    notificationBot.emit('getUploadedFiles', fileName);
     return fileName
-  },
-  onFileUploadStart: function (file, req, res) {
-    var socketIO = require('socket.io-client');
-    var messageBot = socketIO.connect('http://localhost:3000/messageNamespace');
-    var data = {};    
-    data.user = 'ServerBot';    
-    data.content = "El usuario <i>"+req.body.fileUserName+"</i> esta subiendo un archivo: ["+file.originalname+"]";
-    data.date = Date.now();
-    // Adding a message to the chat about the file
-    messageBot.emit('message', data);
-    done = true;
   },
   onFileUploadComplete: function (file, req, res) {
     done = true;

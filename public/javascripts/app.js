@@ -59,8 +59,7 @@ $(document).ready(function(){
     messagesocket.emit('getLastChat',null);
   });
 
-  messagesocket.on('syncMessages',function syncMessages(data){
-    console.log(data);
+  messagesocket.on('syncMessages',function syncMessages(data){    
     var len=data.length;
     for(var i=0; i < len;i++){
       $("#chatLog").append("<p><strong>"+data[i].user+":</strong> "+data[i].content+"</p>");
@@ -76,15 +75,26 @@ $(document).ready(function(){
   // notifications Event
   notificationSocket.on('connect',function connectedToNotifications(){
     notificationSocket.emit('getUserList'); 
+    notificationSocket.emit('getUploadedFiles');
   });
   notificationSocket.on('refreshUserList',function refreshUserListNotification(data){
-    $("#users").html("");
-    console.log(data);
+    $("#users").html("");    
     for(var key in data){
       if(data.hasOwnProperty(key)){
         $("#users").append("<li>"+key+"</li>");
       }
     }
+  });
+  notificationSocket.on('refreshFileList',function refreshUserListNotification(data){
+    $("#filePanel").html("");        
+    for(var i=0; i<data.length;i++){
+      $("#filePanel").append("<div class=\"chatBlock\"><a href=\"#\"><input type=\"hidden\" name=\"fileName\" value=\"" + data[i] + "\"/> <span>" + data[i] + "</span></a></div>");
+      //$("#filePanel").append("<li>"+data[i]+"</li>");
+    }
+    var draggableContent = $("#filePanel a");
+    $.each(draggableContent, function() {
+        $(this).draggable();
+    });
   });
   //Chat Stuff
   $(document).on("click",'#sendMessage', emitMessage);    
@@ -98,27 +108,7 @@ $(document).ready(function(){
     $("#to").val($(this).text());
   });
   // Files stuff
-  function getFileLog() {
-    $.ajax({
-        type: "GET",
-        contenType: "JSON",
-        url: "/getFileLog"
-    }).done(function(response) {
-        $("#filePanel").html("");
-        var chatArray = response;
-        console.log(chatArray);
-        for (var i = 0; i < chatArray.length; i++) {
-            $("#filePanel").append("<div class=\"chatBlock\"><a href=\"#\"><input type=\"hidden\" name=\"fileName\" value=\"" + chatObject[i] + "\"/> <span>" + chatArray[i] + "</span></a></div>");
-        }
-        var draggableContent = $("#filePanel a");
-        $.each(draggableContent, function() {
-            $(this).draggable();
-        });
-    }).fail(function(response) {
-        $("#filePanel").html("");
-        $("#filePanel").append("<div class=\"chatBlock\"><a href=\"#\">" + response.responseText + "</a></div>");
-    });
-  }
+    
   function getPreviewOfFile(nameOfFile) {
     var type = "";
     var container = ""
@@ -129,8 +119,8 @@ $(document).ready(function(){
         data: {
             nameOfFile: nameOfFile
         }
-    }).done(function(response) {
-        type = response;
+    }).done(function(response) {        
+        type = response['Content-Type'];
         console.log("Response type" + type);
         var splittedType = type.split("/");
         if (splittedType[0] == "image") {
@@ -154,20 +144,13 @@ $(document).ready(function(){
   // File drag and preview
   $("#preview").droppable({
     drop: function(event, ui) {
-      //console.log(ui);           
-      var $element = ui.draggable;
-      var nameOfFile = $element.find("input").val();
+      var $element = ui.draggable;      
+      var nameOfFile = $element.find("input").val();      
       $element.fadeOut(function() {
-          getFileLog();
+          notificationSocket.emit('getUploadedFiles');
       });
       $("#titleReceiver").html("Vista previa [" + nameOfFile + "]")
       getPreviewOfFile(nameOfFile);
     }
-  });
-  // Files events
-  messagesocket.on('newFile', function newFileNotification(data){          
-    if((currentUser!=data.user)){
-      board.saveShape(LC.JSONToShape(data.images));
-    }
-  });
+  });  
 });
