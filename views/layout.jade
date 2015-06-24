@@ -12,6 +12,22 @@ html
     link(rel="stylesheet" href="/stylesheets/bootstrap.css" type="text/css")
     link(rel="stylesheet" href="/stylesheets/bootstrap-theme.css" type="text/css")
     link(rel="stylesheet" href="/stylesheets/mainStyles.css" type="text/css")
+    link(rel='stylesheet', href='/stylesheets/literallycanvas.css')
   body
+    div(class='navbar navbar-default')
+      div(class="container")
+        center
+          ul(class="nav")            
+            li(class="active")
+              table
+                tbody
+                  tr
+                    td
+                      img(src="/images/Logo-IPN.png" width="20px" height="29px")
+                    td
+                      a(href="#").
+                        Instituto Politécnico Nacional  - Escuela Superior de Cómputo
+                    td
+                      img(src="/images/escom_normal.png" width="29px" height="29px")
     block content
   script(src="/javascripts/app.js")

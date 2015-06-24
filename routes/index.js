@@ -17,4 +17,7 @@ router.get('/getFileLog', function(req, res){
   var files = fs.readdirSync('./public/uploads/');
   res.json(files);
 });
+router.get('/board', function (req, res) {
+  res.render('board', {title: '|Express'});
+});
 module.exports = router;

@@ -14,6 +14,7 @@ webSocket.createSocket(server, function (error, socketInstance) {
   var privateMessagesLog = [];
   var usernameIndex = {};
   var socketIdIndex = {};
+  var imageContent;
 
   if (error) {
     console.log("Error creating new socket!");
@@ -38,6 +39,7 @@ webSocket.createSocket(server, function (error, socketInstance) {
     });
     socket.on('disconnect', function () {
       console.log("disconnected!!! from Notification Namespace");
+      socketInstance.of('/notificationNamespace').emit('refreshUserList', usernameIndex);
     });
     // Files events
     socket.on('getUploadedFiles', function () {
@@ -78,7 +80,19 @@ webSocket.createSocket(server, function (error, socketInstance) {
       var socketId = usernameIndex[username];      
       delete usernameIndex[username];
       delete socketIdIndex[socketId];      
+      socketInstance.of('/notificationNamespace').emit('refreshUserList', usernameIndex);
       socketInstance.of('/notificationNamespace').emit('userDisconnected', usernameIndex);
+    });
+  });
+
+  socketInstance.of('/boardNamespace').on('connection', function boardNamespace(socket){
+    console.log("Connected to board namespace");
+    socket.on('sync', function syncBoard(data){
+      imageContent = data;
+      socket.broadcast.emit('image',data);
+    });
+    socket.on('getLastContent', function getBoardLastContent(){
+      socket.emit('image', imageContent);
     });
   });
 });

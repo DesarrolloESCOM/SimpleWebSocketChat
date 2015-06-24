@@ -150,5 +150,52 @@ $(document).ready(function(){
       $("#titleReceiver").html("Vista previa [" + nameOfFile + "]")
       getPreviewOfFile(nameOfFile);
     }
-  });  
+  });
+  // Initializing the board and variables
+    // Creating literally canvas board instance
+    window.board = LC.init(document.getElementsByClassName("literally localstorage")[0], {imageURLPrefix: '/images'});
+    var canvas = (document.getElementsByTagName("canvas")[1]);
+    var canvasContext = canvas.getContext("2d");        
+    // Sockets events    
+    var boardSocket = io.connect('/boardNamespace');    
+    boardSocket.on('connect', function connectedToSocket(){      
+      boardSocket.emit('getLastContent', null);
+    });    
+    boardSocket.on('image', function(data){                
+      console.log(data.images);
+      console.log(data.images);
+      console.log(data.images);
+      //LC.JSONToShape(data.images);
+      //board.shapes.push(data.images);
+      board.saveShape(LC.JSONToShape(data.images))
+    });        
+    // Board functions
+    function emitContent(){
+      var data = {};                  
+      var undoStackLength = board.undoStack.length; 
+      var redoStackLength = board.redoStack.length; 
+      // Just enabling three undo/redo events
+      board.undoStack = (board.undoStack).slice(undoStackLength-3,undoStackLength);
+      board.redoStack = (board.redoStack).slice(redoStackLength-3,redoStackLength);      
+      data.images = LC.shapeToJSON(board.shapes[board.shapes.length-1]);
+      boardSocket.emit('sync', data);
+    }
+    board.on('drawStart', function() {
+      emitContent();
+    }); 
+    board.on('drawEnd', function() {
+      emitContent();
+    });
+    board.on('clear',function(){
+      emitContent();
+    });
+    board.on('undo',function(){
+      emitContent();
+    });
+    board.on('redo',function(){
+      emitContent();
+    });
+    board.on('redo',function(){
+      emitContent();
+    });      
 });
