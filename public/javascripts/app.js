@@ -118,8 +118,7 @@ $(document).ready(function(){
             nameOfFile: nameOfFile
         }
     }).done(function(response) {        
-        type = response['Content-Type'];
-        console.log("Response type" + type);
+        type = response['Content-Type'];        
         var splittedType = type.split("/");
         if (splittedType[0] == "image") {
             container = "<img class=\"imagePreview\" src=\"/uploads/" + nameOfFile + "\"/>";
@@ -153,7 +152,15 @@ $(document).ready(function(){
   });
   // Initializing the board and variables
     // Creating literally canvas board instance
-    window.board = LC.init(document.getElementsByClassName("literally localstorage")[0], {imageURLPrefix: '/images'});
+    window.board = LC.init(
+      document.getElementsByClassName("literally localstorage")[0], 
+      {
+        imageURLPrefix: '/images',
+        tools:[
+          LC.tools.Pencil,
+          LC.tools.Eraser          
+        ]
+      });
     var canvas = (document.getElementsByTagName("canvas")[1]);
     var canvasContext = canvas.getContext("2d");        
     // Sockets events    
@@ -161,13 +168,10 @@ $(document).ready(function(){
     boardSocket.on('connect', function connectedToSocket(){      
       boardSocket.emit('getLastContent', null);
     });    
-    boardSocket.on('image', function(data){                
-      console.log(data.images);
-      console.log(data.images);
-      console.log(data.images);
-      //LC.JSONToShape(data.images);
-      //board.shapes.push(data.images);
-      board.saveShape(LC.JSONToShape(data.images))
+    boardSocket.on('image', function(data){                  
+      if(data){
+        board.saveShape(LC.createShape(data.shape.type, {points:data.shape.points}));   
+      }      
     });        
     // Board functions
     function emitContent(){
@@ -176,16 +180,20 @@ $(document).ready(function(){
       var redoStackLength = board.redoStack.length; 
       // Just enabling three undo/redo events
       board.undoStack = (board.undoStack).slice(undoStackLength-3,undoStackLength);
-      board.redoStack = (board.redoStack).slice(redoStackLength-3,redoStackLength);      
-      data.images = LC.shapeToJSON(board.shapes[board.shapes.length-1]);
+      board.redoStack = (board.redoStack).slice(redoStackLength-3,redoStackLength);            
+      var lastShape = board.shapes[board.shapes.length-1];      
+      data.shape = {
+        'points' : lastShape.points,
+        'type': lastShape.__proto__.className
+      }
       boardSocket.emit('sync', data);
     }
     board.on('drawStart', function() {
       emitContent();
-    }); 
+    });    
     board.on('drawEnd', function() {
       emitContent();
-    });
+    });    
     board.on('clear',function(){
       emitContent();
     });
