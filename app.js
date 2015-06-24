@@ -46,7 +46,7 @@ app.use(multer({
 }));
 app.post('/fileUpload', function (req, res) {
   if (done == true) {
-    res.end("File has been uploaded");
+    res.end("El archivo fue subido.");
   }
 });
 // catch 404 and forward to error handler

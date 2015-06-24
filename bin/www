@@ -55,19 +55,19 @@ webSocket.createSocket(server, function (error, socketInstance) {
 
     socket.on('message', function (data) {
       //
-      message.content = data.content;
-      message.user = data.user;
-      message.date = new Date();
-      messageLog.push(message);
+      //message.content = data.content;
+      //message.user = data.user;
+      //message.date = new Date();
+      //messageLog.push(message);
       //
       socketInstance.of('/messageNamespace').emit('incommingMessage', data);
     });
     socket.on('privateMessage', function (data) {
-      message.content = data.content;
-      message.from = data.user;
-      message.to = data.to;
-      message.date = new Date();
-      privateMessagesLog.push(message);
+      //message.content = data.content;
+      //message.from = data.user;
+      //message.to = data.to;
+      //message.date = new Date();
+      //privateMessagesLog.push(message);
       socketInstance.of('/messageNamespace').to(usernameIndex[message.to]).emit('receivePrivate', data);
     });
     socket.on('register', function register(data) {
