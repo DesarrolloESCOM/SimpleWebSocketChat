@@ -1,9 +1,9 @@
 $(document).ready(function(){
   // for testing purposes
   // Messages Namespace
-  var messagesocket = io.connect('http://localhost:3000/messageNamespace');
+  var messagesocket = io.connect('/messageNamespace');
   // Notification Namespace
-  var notificationSocket = io.connect('http://localhost:3000/notificationNamespace');
+  var notificationSocket = io.connect('/notificationNamespace');
   // Current user, generated randomly
   window.currentUser = $("#idUser").val()||('AnonUser'+parseInt((271)*Math.random()));
   // Dialog stuff

@@ -28,8 +28,8 @@ app.use(multer({
     var date = new Date();
     var fileName = req.body.fileUserName +"_"+ date.toISOString();
     var socketIO = require('socket.io-client');
-    var messageBot = socketIO.connect('http://localhost:3000/messageNamespace');
-    var notificationBot = socketIO.connect('http://localhost:3000/notificationNamespace');
+    var messageBot = socketIO.connect('http://127.0.0.1/messageNamespace');
+    var notificationBot = socketIO.connect('http://127.0.0.1/notificationNamespace');
     // Adding a message to the chat about the file
     var data = {};
     data.user = 'ServerBot';
